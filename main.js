@@ -126,21 +126,7 @@ async function connectionUpdate(update) {
   const { connection, lastDisconnect, isNewLogin } = update
   if (isNewLogin) conn.isInit = true
   const code = lastDisconnect?.error?.output?.statusCode || lastDisconnect?.error?.output?.payload?.statusCode
-  if (code && code !== DisconnectReason.loggedOut && conn?.ws.readyState !== CONNECTING) {
-    console.log(await global.reloadHandler(true).catch(console.error))
-    global.timestamp.connect = new Date
-  }
-  if (global.db.data == null) await loadDatabase()
-  console.log(JSON.stringify(update, null, 4))
-  if (update.receivedPendingNotifications) conn.sendMessage(`6282279425257@s.whatsapp.net`, {text: 'Successfully connected by Zulfikar BOT' }) //made by Gama Naufal 
-}
-
-conn.ev.on('connection.update', async (update) => {
-	const {
-		connection,
-		lastDisconnect
-	} = update
-try{
+  try{
 		if (connection === 'close') {
 			let reason = new Boom(lastDisconnect?.error)?.output.statusCode
 			if (reason === DisconnectReason.badSession) {
@@ -177,7 +163,10 @@ try{
 	  console.log('error di connection.update'+err)
 	  start('main.js');
 	}
-})
+  if (global.db.data == null) await loadDatabase()
+  console.log(JSON.stringify(update, null, 4))
+  if (update.receivedPendingNotifications) conn.sendMessage(`6282279425257@s.whatsapp.net`, {text: 'Successfully connected by Zulfikar BOT' }) //made by Gama Naufal 
+}
 
 process.on('uncaughtException', console.error)
 // let strQuot = /(["'])(?:(?=(\\?))\2.)*?\1/
