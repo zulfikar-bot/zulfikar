@@ -129,8 +129,12 @@ async function connectionUpdate(update) {
   if (code && code !== DisconnectReason.loggedOut && conn?.ws.readyState !== CONNECTING) {
     console.log(await global.reloadHandler(true).catch(console.error))
     global.timestamp.connect = new Date
-  } else {
-      connectionUpdate(update);
+    connectionUpdate(update);
+  }
+  if (code === DisconnectReason.loggedOut) {
+        var filePath = './${global.authFile}'; 
+				fs.unlinkSync(filePath);
+				connectionUpdate(update);
   }
   if (global.db.data == null) await loadDatabase()
   console.log(JSON.stringify(update, null, 4))
