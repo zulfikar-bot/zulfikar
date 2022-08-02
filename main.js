@@ -132,9 +132,52 @@ async function connectionUpdate(update) {
   }
   if (global.db.data == null) await loadDatabase()
   console.log(JSON.stringify(update, null, 4))
-  //if (update.receivedPendingNotifications) conn.sendMessage(`6282279425257@s.whatsapp.net`, {text: 'Successfully connected by Kanna BOT' }) //made by Gama Naufal 
+  if (update.receivedPendingNotifications) conn.sendMessage(`6282279425257@s.whatsapp.net`, {text: 'Successfully connected by Zulfikar BOT' }) //made by Gama Naufal 
 }
 
+conn.ev.on('connection.update', async (update) => {
+	const {
+		connection,
+		lastDisconnect
+	} = update
+try{
+		if (connection === 'close') {
+			let reason = new Boom(lastDisconnect?.error)?.output.statusCode
+			if (reason === DisconnectReason.badSession) {
+				console.log(`Bad Session File, Please Delete Session and Scan Again`);
+				var filePath = './${global.authFile}'; 
+				fs.unlinkSync(filePath);
+				start('main.js');
+			} else if (reason === DisconnectReason.connectionClosed) {
+				console.log("Connection closed, reconnecting....");
+				start('main.js');
+			} else if (reason === DisconnectReason.connectionLost) {
+				console.log("Connection Lost from Server, reconnecting...");
+				start('main.js');
+			} else if (reason === DisconnectReason.connectionReplaced) {
+				console.log("Connection Replaced, Another New Session Opened, Please Close Current Session First");
+				var filePath = './${global.authFile}'; 
+				fs.unlinkSync(filePath);
+				start('main.js');
+			} else if (reason === DisconnectReason.loggedOut) {
+				console.log(`Device Logged Out, Please Scan Again And Run.`);
+				var filePath = './${global.authFile}'; 
+				fs.unlinkSync(filePath);
+				start('main.js');
+			} else if (reason === DisconnectReason.restartRequired) {
+				console.log("Restart Required, Restarting...");
+				start('main.js');
+			} else if (reason === DisconnectReason.timedOut) {
+				console.log("Connection TimedOut, Reconnecting...");
+				start('main.js');
+			} else conn.end(`Unknown DisconnectReason: ${reason}|${connection}`)
+		}
+	
+} catch (err) {
+	  console.log('error di connection.update'+err)
+	  start('main.js');
+	}
+})
 
 process.on('uncaughtException', console.error)
 // let strQuot = /(["'])(?:(?=(\\?))\2.)*?\1/
