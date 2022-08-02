@@ -81,7 +81,7 @@ function start(file) {
     if (code === 0) return
     watchFile(args[0], () => {
       unwatchFile(args[0])
-    }), start('main.js')
+    })
   })
   let opts = new Object(yargs(process.argv.slice(2)).exitProcess(false).parse())
   if (!opts['test'])
