@@ -138,7 +138,7 @@ async function connectionUpdate(update) {
   }
   if (global.db.data == null) await loadDatabase()
   console.log(JSON.stringify(update, null, 4))
-  if (update.receivedPendingNotifications) conn.sendMessage(`6282279425257@s.whatsapp.net`, {text: 'Successfully connected by Zulfikar BOT' }) //made by Gama Naufal 
+  //if (update.receivedPendingNotifications) conn.sendMessage(`6282279425257@s.whatsapp.net`, {text: 'Successfully connected by Zulfikar BOT' }) //made by Gama Naufal 
 }
 
 process.on('uncaughtException', console.error)
